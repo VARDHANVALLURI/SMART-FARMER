@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="te">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>పాడి ఖర్చులు & లాభనష్టం</title>
+
+<style>
+/* ===== RESET ===== */
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family: system-ui, sans-serif;
+}
+
+/* ===== BODY WITH BACKGROUND ===== */
+body{
+  min-height:100vh;
+  background-image: url("../assets/images/paddy1.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  transition: background-image 1.5s ease-in-out;
+  color:#1b1b1b;
+  position: relative;
+}
+
+/* Dark overlay for readability */
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  background: rgba(0,0,0,0.45);
+  z-index:-1;
+}
+
+/* ===== CONTAINER ===== */
+.container{
+  max-width:480px;
+  margin:auto;
+  padding:16px;
+}
+
+/* ===== CARD BOX ===== */
+.box{
+  background:#ffffffee;
+  border-radius:16px;
+  padding:16px;
+  margin-bottom:14px;
+  box-shadow:0 4px 12px rgba(0,0,0,.15);
+}
+
+/* ===== HEADINGS ===== */
+h1{text-align:center;font-size:20px}
+h2{font-size:18px;margin-bottom:10px}
+
+/* ===== INPUTS ===== */
+.field{margin-bottom:10px}
+label{font-size:15px;display:block;margin-bottom:4px}
+input{
+  width:100%;
+  padding:12px;
+  font-size:18px;
+  border-radius:10px;
+  border:1px solid #ccc;
+}
+
+/* ===== BUTTONS ===== */
+.btn{
+  width:100%;
+  padding:14px;
+  font-size:17px;
+  border:none;
+  border-radius:14px;
+  font-weight:bold;
+  margin-top:8px;
+  cursor:pointer;
+}
+
+.calc{background:#2e7d32;color:#fff}
+.save{background:#0277bd;color:#fff}
+.historyBtn{background:#6a1b9a;color:#fff}
+.wa{background:#25D366;color:#fff}
+.del{background:#c62828;color:#fff;font-size:14px;padding:8px;border-radius:10px}
+.share{background:#25D366;color:#fff;font-size:14px;padding:8px;border-radius:10px}
+
+/* ===== RESULTS ===== */
+.result{font-weight:600;font-size:16px}
+.profit{color:#2e7d32}
+.loss{color:#c62828}
+
+/* ===== HISTORY ===== */
+.history-item{
+  border-top:1px solid #eee;
+  padding-top:10px;
+  margin-top:10px;
+  font-size:14px;
+}
+
+.time{font-size:13px;color:#555;margin-bottom:6px}
+
+.actions{
+  display:flex;
+  gap:8px;
+  margin-top:8px;
+}
+
+/* ===== WARNING ===== */
+.warning{
+  background:#fff3cd;
+  color:#664d03;
+  padding:12px;
+  border-radius:14px;
+  font-size:14px;
+  margin-top:12px;
+}
+
+/* ===== MOBILE FINE TUNING ===== */
+@media (max-width:600px){
+  body{
+    background-position: center top;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="box">
+<h1>🌾 పాడి ఖర్చులు & లాభనష్టం</h1>
+</div>
+
+<div class="box">
+<h2>📉 ఖర్చులు</h2>
+<div class="field"><label>🌱 పిచికారీ (₹)</label><input id="pesticide" type="number"></div>
+<div class="field"><label>🚜 కోత యంత్రం (₹)</label><input id="harvest" type="number"></div>
+<div class="field"><label>👷 కూలీలు (₹)</label><input id="wages" type="number"></div>
+<div class="field"><label>📦 ఇతర ఖర్చులు (₹)</label><input id="other" type="number"></div>
+</div>
+
+<div class="box">
+<h2>📈 ఆదాయం</h2>
+<div class="field"><label>🌾 అమ్మిన బస్తాలు</label><input id="bags" type="number"></div>
+<div class="field"><label>💰 ఒక్క బస్తా ధర (₹)</label><input id="price" type="number"></div>
+</div>
+
+<button class="btn calc" onclick="calculate()">🧮 లెక్క చూపించండి</button>
+<button class="btn save" onclick="saveRecord()">💾 సేవ్ చేయండి</button>
+<button class="btn historyBtn" onclick="toggleHistory()">📜 సేవ్ చేసిన వివరాలు</button>
+
+<div class="box result">📉 మొత్తం ఖర్చు: ₹ <span id="exp">0</span></div>
+<div class="box result">📈 మొత్తం ఆదాయం: ₹ <span id="inc">0</span></div>
+<div class="box result" id="net">📊 లాభం / నష్టం</div>
+
+<div class="warning">
+⚠️ ముఖ్య గమనిక:<br>
+• ఈ డేటా ఇంటర్నెట్‌లో సేవ్ కావడం లేదు<br>
+• మీ మొబైల్ / బ్రౌజర్‌లోనే ఉంటుంది<br>
+• బ్రౌజర్ డేటా క్లియర్ చేస్తే ఇది పూర్తిగా తొలగిపోతుంది
+</div>
+
+<div class="box" id="historyBox" style="display:none">
+<h2>📜 సేవ్ చేసిన చరిత్ర</h2>
+<div id="historyList"></div>
+</div>
+
+</div>
+
+<script>
+/* ===== BACKGROUND ROTATION ===== */
+const backgrounds = [
+  "../assets/images/paddy1.jpg",
+  "../assets/images/paddy2.jpg",
+  "../assets/images/paddy3.jpg",
+  "../assets/images/paddy4.jpg"
+];
+let bgIndex = 0;
+setInterval(()=>{
+  bgIndex = (bgIndex+1) % backgrounds.length;
+  document.body.style.backgroundImage =
+    `url('${backgrounds[bgIndex]}')`;
+},7000);
+
+/* ===== LOGIC (UNCHANGED) ===== */
+let last={};
+function v(id){return Number(document.getElementById(id).value)||0}
+
+function calculate(){
+  let expense=v("pesticide")+v("harvest")+v("wages")+v("other");
+  let income=v("bags")*v("price");
+  let net=income-expense;
+
+  exp.innerText=expense;
+  inc.innerText=income;
+  net>=0
+    ? setNet(`✅ లాభం: ₹ ${net}`,"profit")
+    : setNet(`❌ నష్టం: ₹ ${Math.abs(net)}`,"loss");
+
+  last={expense,income,net,
+    pesticide:v("pesticide"),
+    harvest:v("harvest"),
+    wages:v("wages"),
+    other:v("other"),
+    bags:v("bags"),
+    price:v("price")
+  };
+}
+
+function setNet(text,cls){
+  net.innerHTML=text;
+  net.className="box result "+cls;
+}
+
+function saveRecord(){
+  if(!last.income){alert("ముందుగా లెక్క చూపించండి");return}
+  let h=JSON.parse(localStorage.getItem("paddy_history")||"[]");
+  h.unshift({time:new Date().toLocaleString("te-IN"),data:last});
+  localStorage.setItem("paddy_history",JSON.stringify(h));
+  alert("💾 వివరాలు సేవ్ అయ్యాయి");
+}
+
+function toggleHistory(){
+  historyBox.style.display=
+    historyBox.style.display==="none"?"block":"none";
+  loadHistory();
+}
+
+function loadHistory(){
+  let h=JSON.parse(localStorage.getItem("paddy_history")||"[]");
+  historyList.innerHTML=h.length?"":"సేవ్ చేసిన వివరాలు లేవు";
+
+  h.forEach((item,i)=>{
+    historyList.innerHTML+=`
+    <div class="history-item">
+      <div class="time">🕒 ${item.time}</div>
+      🌾 బస్తాలు: ${item.data.bags}<br>
+      📉 ఖర్చు: ₹${item.data.expense}<br>
+      📈 ఆదాయం: ₹${item.data.income}<br>
+      ${item.data.net>=0?`✅ లాభం: ₹${item.data.net}`:`❌ నష్టం: ₹${Math.abs(item.data.net)}`}
+      <div class="actions">
+        <button class="share" onclick="shareOne(${i})">📲 షేర్</button>
+        <button class="del" onclick="deleteOne(${i})">🗑️ తొలగించండి</button>
+      </div>
+    </div>`;
+  });
+}
+
+function deleteOne(i){
+  if(!confirm("ఈ వివరాన్ని తొలగించాలా?"))return;
+  let h=JSON.parse(localStorage.getItem("paddy_history"));
+  h.splice(i,1);
+  localStorage.setItem("paddy_history",JSON.stringify(h));
+  loadHistory();
+}
+
+function shareOne(i){
+  let h=JSON.parse(localStorage.getItem("paddy_history"));
+  let d=h[i].data;
+  let text=`🌾 పాడి లెక్కల సంగ్రహం\n🕒 ${h[i].time}\n\n📉 ఖర్చు ₹${d.expense}\n📈 ఆదాయం ₹${d.income}\n${d.net>=0?"✅ లాభం":"❌ నష్టం"} ₹${Math.abs(d.net)}`;
+  window.open("https://wa.me/?text="+encodeURIComponent(text));
+}
+</script>
+
+</body>
+</html>

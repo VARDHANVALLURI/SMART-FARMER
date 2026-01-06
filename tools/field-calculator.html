@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="te">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>పొలం కౌలు లెక్కింపు – East Godavari</title>
+
+<style>
+/* ===== RESET ===== */
+*{
+  box-sizing:border-box;
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+/* ===== BODY WITH BACKGROUND ===== */
+body{
+  margin:0;
+  min-height:100vh;
+  background-image: url("../assets/images/paddy1.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  transition: background-image 1.5s ease-in-out;
+  color:#1b2d1b;
+  position: relative;
+}
+
+/* DARK OVERLAY */
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  background: rgba(0,0,0,0.45);
+  z-index:-1;
+}
+
+/* ===== HEADER ===== */
+header{
+  background:linear-gradient(135deg,#1b5e20cc,#2e7d32cc);
+  color:#fff;
+  padding:20px 16px;
+  text-align:center;
+  backdrop-filter: blur(2px);
+}
+
+.icon{
+  font-size:48px;
+  margin-bottom:6px;
+}
+
+header h1{
+  margin:0;
+  font-size:22px;
+}
+
+header p{
+  margin:6px 0 0;
+  font-size:14px;
+  opacity:0.95;
+}
+
+/* ===== CONTAINER ===== */
+.container{
+  max-width:520px;
+  margin:auto;
+  padding:16px;
+}
+
+/* ===== CARD ===== */
+.card{
+  background:#ffffffee;
+  border-radius:18px;
+  padding:18px;
+  margin-bottom:18px;
+  box-shadow:0 6px 18px rgba(0,0,0,0.12);
+}
+
+/* ===== INPUTS ===== */
+label{
+  font-weight:700;
+  margin-top:14px;
+  display:block;
+}
+
+input{
+  width:100%;
+  padding:14px;
+  font-size:18px;
+  margin-top:6px;
+  border-radius:14px;
+  border:1px solid #ccc;
+}
+
+/* ===== BUTTON ===== */
+button{
+  width:100%;
+  margin-top:20px;
+  padding:16px;
+  font-size:20px;
+  font-weight:800;
+  border:none;
+  border-radius:16px;
+  background:#2e7d32;
+  color:#fff;
+  cursor:pointer;
+}
+
+/* ===== BIG RESULT ===== */
+.big-result{
+  background:#e6f4ea;
+  border-radius:18px;
+  padding:20px;
+  text-align:center;
+}
+
+.big-result .label{
+  font-size:16px;
+  opacity:0.8;
+}
+
+.big-result .number{
+  font-size:44px;
+  font-weight:900;
+  color:#1b5e20;
+  margin:6px 0;
+}
+
+.sub{
+  font-size:18px;
+  margin-top:6px;
+}
+
+/* ===== EXPLANATION ===== */
+.explain{
+  font-size:16px;
+  line-height:1.7;
+  margin-top:16px;
+}
+
+/* ===== WHATSAPP ===== */
+.whatsapp{
+  background:#25d366;
+  color:#fff;
+  text-align:center;
+  padding:14px;
+  border-radius:16px;
+  font-size:18px;
+  font-weight:800;
+  cursor:pointer;
+  margin-top:16px;
+}
+
+/* ===== NOTES ===== */
+.note{
+  font-size:13px;
+  color:#555;
+  line-height:1.6;
+  margin-top:12px;
+}
+
+/* ===== MOBILE TUNING ===== */
+@media (max-width:600px){
+  body{
+    background-position: center top;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="icon"></div>
+  <h1>పొలం కౌలు లెక్కింపు</h1>
+  <p>తూర్పు గోదావరి రైతుల కోసం</p>
+</header>
+
+<div class="container">
+
+  <!-- INPUT CARD -->
+  <div class="card">
+    <label>ఎకరాలు</label>
+    <input id="acres" type="number" placeholder="ఉదా: 2">
+
+    <label>కుంచాలు</label>
+    <input id="kunchulu" type="number" placeholder="ఉదా: 8">
+
+    <label>సెంట్లు</label>
+    <input id="cents" type="number" placeholder="ఉదా: 5">
+
+    <label>1 ఎకరానికి కౌలు (బస్తాలు)</label>
+    <input id="rate" type="number" placeholder="ఉదా: 28">
+
+    <button onclick="calculate()">లెక్కించండి</button>
+  </div>
+
+  <!-- RESULT -->
+  <div class="card" id="result" style="display:none;">
+
+    <div class="big-result">
+      <div class="label">మొత్తం పొలం</div>
+      <div class="number" id="totalAcres"></div>
+      <div class="sub">ఎకరాలు</div>
+    </div>
+
+    <div class="big-result" style="margin-top:14px;">
+      <div class="label">కౌలు బస్తాలు</div>
+      <div class="number" id="roundedBags"></div>
+      <div class="sub" id="exactBags"></div>
+    </div>
+
+    <div class="explain" id="explain"></div>
+
+    <div class="whatsapp" onclick="shareWhatsApp()">
+      📲 వాట్సాప్‌లో పంపండి
+    </div>
+
+    <div class="note">
+      ⚠️ ఎక్కువ చోట్ల 75 కిలోల పాడి బస్తాలను ప్రాధాన్యతగా ఉపయోగిస్తారు.<br>
+      ℹ️ సాధారణంగా కౌలు బస్తాలు పూర్ణ సంఖ్యలలోనే ఇస్తారు.<br>
+      ⚠️ ఈ లెక్కలు తూర్పు గోదావరి ప్రాంత కౌలు పద్ధతిపై ఆధారితం.
+    </div>
+  </div>
+
+</div>
+
+<script>
+/* ===== BACKGROUND ROTATION ===== */
+const backgrounds = [
+  "../assets/images/paddy1.jpg",
+  "../assets/images/paddy2.jpg",
+  "../assets/images/paddy3.jpg",
+  "../assets/images/paddy4.jpg"
+];
+let bgIndex = 0;
+setInterval(()=>{
+  bgIndex = (bgIndex + 1) % backgrounds.length;
+  document.body.style.backgroundImage =
+    `url('${backgrounds[bgIndex]}')`;
+},7000);
+
+/* ===== ORIGINAL LOGIC (UNCHANGED) ===== */
+let shareText = "";
+
+function calculate(){
+  const a = Number(acres.value) || 0;
+  const k = Number(kunchulu.value) || 0;
+  const c = Number(cents.value) || 0;
+  const r = Number(rate.value) || 0;
+
+  const acresFromKunchulu = k * 0.1;
+  const acresFromCents = c * 0.01;
+
+  const total = a + acresFromKunchulu + acresFromCents;
+  const bags = total * r;
+  const round = Math.round(bags);
+
+  document.getElementById("result").style.display = "block";
+
+  totalAcres.textContent = total.toFixed(2);
+  roundedBags.textContent = round;
+  exactBags.textContent = `ఖచ్చితంగా: ${bags.toFixed(2)} బస్తాలు`;
+
+  document.getElementById("explain").innerHTML = `
+    మీరు ఇచ్చిన పొలం ఇలా లెక్క అయింది:<br><br>
+    • ${a} ఎకరాలు → ${a.toFixed(2)} ఎకరాలు<br>
+    • ${k} కుంచాలు → ${acresFromKunchulu.toFixed(2)} ఎకరాలు<br>
+    • ${c} సెంట్లు → ${acresFromCents.toFixed(2)} ఎకరాలు<br><br>
+    మొత్తం <strong>${total.toFixed(2)} ఎకరాలు</strong><br><br>
+    1 ఎకరానికి ${r} బస్తాలు కాబట్టి<br>
+    మొత్తం <strong>${bags.toFixed(2)} బస్తాలు</strong><br>
+    సాధారణంగా <strong>${round} బస్తాలు</strong>
+  `;
+
+  shareText =
+`🧮 పొలం కౌలు లెక్క
+పొలం: ${a} ఎకరాలు, ${k} కుంచాలు, ${c} సెంట్లు
+మొత్తం: ${total.toFixed(2)} ఎకరాలు
+1 ఎకరానికి: ${r} బస్తాలు
+మొత్తం కౌలు: ${bags.toFixed(2)}
+సాధారణంగా: ${round} బస్తాలు
+(తూర్పు గోదావరి పద్ధతి)`;
+}
+
+function shareWhatsApp(){
+  window.open(
+    "https://wa.me/?text=" + encodeURIComponent(shareText),
+    "_blank"
+  );
+}
+</script>
+
+</body>
+</html>

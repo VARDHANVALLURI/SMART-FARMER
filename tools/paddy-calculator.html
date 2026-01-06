@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="te">
+<head>
+<meta charset="UTF-8">
+<title>Paddy Calculator</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+*{box-sizing:border-box;font-family:Arial,sans-serif}
+
+body{
+margin:0;
+min-height:100vh;
+background-color:#1b2d1b;
+background-size:cover;
+background-position:center;
+background-repeat:no-repeat;
+display:flex;
+flex-direction:column;
+justify-content:space-between;
+color:#fff;
+transition:background-image 1s ease-in-out;
+}
+
+/* Dark overlay */
+body::before{
+content:"";
+position:fixed;
+top:0;left:0;
+width:100%;height:100%;
+background:rgba(0,0,0,0.55);
+z-index:-1;
+}
+
+/* Quote box */
+.quote-box{
+text-align:center;
+padding:10px 15px;
+font-size:16px;
+font-weight:bold;
+background:rgba(0,0,0,0.6);
+margin:10px;
+border-radius:10px;
+}
+
+.container{padding:20px;max-width:420px;margin:auto}
+
+h1{text-align:center;margin-bottom:5px}
+
+.subtitle{text-align:center;font-size:14px;opacity:.9;margin-bottom:12px}
+
+.toggle{display:flex;margin-bottom:12px}
+.toggle button{
+flex:1;padding:10px;border:none;
+font-weight:bold;cursor:pointer
+}
+.active{background:#f1c40f;color:#000}
+.inactive{background:#444;color:#fff}
+
+label{font-weight:bold}
+input{
+width:100%;padding:16px;font-size:20px;
+border-radius:8px;border:none;margin-top:5px
+}
+
+.error{
+color:#ff7675;font-size:14px;margin-top:5px;display:none
+}
+
+.result{
+margin-top:20px;background:rgba(0,0,0,.65);
+padding:18px;border-radius:12px;display:none
+}
+
+.big{font-size:32px;font-weight:bold;color:#f1c40f}
+.mid{font-size:20px;margin-top:6px}
+
+.btn{
+width:100%;padding:14px;font-size:18px;
+border:none;border-radius:8px;
+font-weight:bold;margin-top:10px;cursor:pointer
+}
+
+.wa{
+background:#25D366;color:#000;display:none
+}
+
+footer{
+text-align:center;padding:10px;
+font-size:13px;background:rgba(0,0,0,.6)
+}
+</style>
+</head>
+
+<body>
+
+<!-- 🌾 Telugu Farmer Quote -->
+<div class="quote-box" id="quoteBox">
+రైతు బాగుంటే దేశం బాగుంటుంది 🌾
+</div>
+
+<div class="container">
+<h1 id="title">🌾 Paddy Calculator</h1>
+
+<div class="subtitle" id="subtitle">
+70 కిలో సంచులు → 75 కిలో లెక్క ప్రకారం
+</div>
+
+<div class="toggle">
+<button id="enBtn" class="inactive" onclick="setLang('en')">English</button>
+<button id="teBtn" class="active" onclick="setLang('te')">తెలుగు</button>
+</div>
+
+<label id="bagLabel">70 కిలో సంచుల సంఖ్య</label>
+<input type="number" id="bags" placeholder="సంచుల సంఖ్య (ఉదా: 62)">
+<div class="error" id="error"></div>
+
+<div class="result" id="result">
+<div class="big" id="bags75"></div>
+<div class="mid" id="extraKg"></div>
+<div class="mid" id="totalKg"></div>
+</div>
+
+<button class="btn wa" id="shareBtn" onclick="shareWhatsApp()">
+వాట్సాప్‌లో పంపండి
+</button>
+</div>
+
+<footer>
+WEBSITE DESIGNED BY <b>VALLURI KRISHNANANDA CHOWDARY GARI ABBAI</b> WITH RESPECT TO ALL FARMERS 🙏
+</footer>
+
+<script>
+/* 🌾 LOCAL PADDY IMAGES */
+const paddyImages = [
+  "../assets/images/paddy1.jpg",
+  "../assets/images/paddy2.jpg",
+  "../assets/images/paddy3.jpg",
+  "../assets/images/paddy4.jpg"
+];
+
+/* 🌾 TELUGU FARMER QUOTES */
+const quotes = [
+  "రైతు బాగుంటే దేశం బాగుంటుంది 🌾",
+  "భూమిని నమ్మినవాడే రైతు 🙏",
+  "విత్తనం నాటితే భవిష్యత్తు మొలుస్తుంది 🌱",
+  "రైతు చెమటే మన అన్నం 💚",
+  "పొలం పచ్చగా ఉంటే జీవితం బాగుంటుంది 🌾"
+];
+
+/* 🔁 Background auto-change */
+let imgIndex = 0;
+document.body.style.backgroundImage = `url('${paddyImages[imgIndex]}')`;
+
+setInterval(() => {
+  imgIndex = (imgIndex + 1) % paddyImages.length;
+  document.body.style.backgroundImage = `url('${paddyImages[imgIndex]}')`;
+}, 4000);
+
+/* 🔁 Quote auto-change */
+let quoteIndex = 0;
+setInterval(() => {
+  quoteIndex = (quoteIndex + 1) % quotes.length;
+  document.getElementById("quoteBox").innerText = quotes[quoteIndex];
+}, 5000);
+
+/* -------- Calculator Logic -------- */
+
+let last = {};
+document.getElementById("bags").addEventListener("input", calculate);
+
+function setLang(l){
+if(l==="en"){
+title.innerText="🌾 Paddy Calculator";
+subtitle.innerText="70 kg bags → counted as 75 kg structure";
+bagLabel.innerText="Number of 70 kg bags";
+bags.placeholder="Enter bags (e.g. 62)";
+}else{
+title.innerText="🌾 వరి లెక్కల యంత్రం";
+subtitle.innerText="70 కిలో సంచులు → 75 కిలో లెక్క ప్రకారం";
+bagLabel.innerText="70 కిలో సంచుల సంఖ్య";
+bags.placeholder="సంచుల సంఖ్య (ఉదా: 62)";
+}
+}
+
+function calculate(){
+const b=parseInt(bags.value);
+if(!b||b<=0){
+error.style.display="block";
+error.innerText="సరైన సంచుల సంఖ్య ఇవ్వండి";
+result.style.display="none";
+shareBtn.style.display="none";
+return;
+}
+
+error.style.display="none";
+
+const total=b*70;
+const full=Math.floor(total/75);
+const rem=total%75;
+
+last={b,full,rem,total};
+
+result.style.display="block";
+shareBtn.style.display="block";
+
+bags75.innerText="75 కిలో సంచులు: "+full;
+extraKg.innerText="మిగిలిన బరువు: "+rem+" కిలోలు";
+totalKg.innerText="మొత్తం బరువు: "+total+" కిలోలు";
+}
+
+function shareWhatsApp(){
+let msg=
+`🌾 వరి లెక్కలు
+
+మొత్తం సంచులు: ${last.b}
+75 కిలో సంచులు: ${last.full}
+మిగిలిన బరువు: ${last.rem} కిలోలు
+మొత్తం బరువు: ${last.total} కిలోలు`;
+
+window.open("https://wa.me/?text="+encodeURIComponent(msg),"_blank");
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="te">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title> Godavari Smart Farmer App</title>
+
+<style>
+/* ===== RESET ===== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: system-ui, sans-serif;
+}
+
+body {
+  background: #f4f6f4;
+  color: #1b2d1b;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ===== HEADER ===== */
+header {
+  background: #1b5e20;
+  color: #fff;
+  padding: 16px;
+  text-align: center;
+}
+
+header h1 {
+  font-size: 20px;
+  margin-bottom: 6px;
+}
+
+header p {
+  font-size: 14px;
+  opacity: 0.9;
+}
+
+/* ===== MAIN ===== */
+main {
+  flex: 1;
+  padding: 16px;
+}
+
+/* ===== TOOL GRID ===== */
+.tool-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+}
+
+.tool-card {
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 18px 12px;
+  text-align: center;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.08);
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.15s ease;
+}
+
+.tool-card:active {
+  transform: scale(0.97);
+}
+
+.tool-icon {
+  font-size: 36px;
+  margin-bottom: 8px;
+}
+
+.tool-title {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.tool-desc {
+  font-size: 12px;
+  color: #555;
+  margin-top: 4px;
+}
+
+/* ===== FOOTER ===== */
+footer {
+  text-align: center;
+  padding: 10px;
+  font-size: 12px;
+  color: #555;
+}
+</style>
+</head>
+
+<body>
+
+<!-- ===== HEADER ===== -->
+<header>
+  <h1> రైతు సహాయకుడు</h1>
+  <p>మన తూర్పు గోదావరి రైతుల కోసం</p>
+</header>
+
+<!-- ===== MAIN ===== -->
+<main>
+
+  <div class="tool-grid">
+
+    <a href="tools/paddy-calculator.html" class="tool-card">
+      <div class="tool-icon">🌾</div>
+      <div class="tool-title">వరి బరువు లెక్కింపు</div>
+      <div class="tool-desc">(70kg → 75kg లెక్క – స్థానిక విధానం)</div>
+    </a>
+
+    <a href="tools/field-calculator.html" class="tool-card">
+      <div class="tool-icon">📄</div>
+      <div class="tool-title">పొలం కౌలు లెక్కింపు</div>
+      <div class="tool-desc">తూర్పు గోదావరి రైతుల కోసం</div>
+    </a>
+
+    <a href="tools/paddy-schemes.html" class="tool-card">
+      <div class="tool-icon">🏛️</div>
+      <div class="tool-title"> వరి ప్రభుత్వ సహాయాలు</div>
+      <div class="tool-desc">ఆంధ్రప్రదేశ్ ప్రభుత్వం అమలు చేస్తున్న వరి పథకాలు(</div>
+    </a>
+
+    <a href="tools/weather.html" class="tool-card">
+  <div class="tool-icon">🌤️</div>
+  <div class="tool-title">వాతావరణం</div>
+  <div class="tool-desc">ప్రాంతం ఆధారంగా సమాచారం</div>
+</a>
+
+ <a href="tools/expenses.html" class="tool-card">
+  <div class="tool-icon">📉</div>
+  <div class="tool-title">ఖర్చులు లెక్కింపు</div>
+  <div class="tool-desc"> వరి లాభనష్టాల లెక్క</div>
+</a>
+
+<a href="tools/paddy-diseases.html" class="tool-card">
+  <div class="tool-icon">⚠️</div>
+  <div class="tool-title">వరి పంట వ్యాధులు</div>
+  <div class="tool-desc"> లక్షణాలు చూసి ముందస్తు జాగ్రత్తలు తీసుకోండి</div>
+</a>
+
+  </div>
+
+</main>
+
+<!-- ===== FOOTER ===== -->
+<footer>
+  ఈ యాప్ తూర్పు గోదావరి రైతుల అవసరాల కోసం ప్రత్యేకంగా రూపొందించబడింది
+ఎటువంటి డేటా సేకరణ లేదు • ప్రకటనలు లేవు
+</footer>
+
+</body>
+</html>
