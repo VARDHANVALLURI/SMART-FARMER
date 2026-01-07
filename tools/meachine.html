@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="te">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>కోత – కూలీలు vs యంత్రం (తూర్పు గోదావరి)</title>
+
+<style>
+*{box-sizing:border-box;font-family:system-ui,sans-serif}
+
+body{
+margin:0;
+background:#f4f7f5;
+color:#222;
+}
+
+header{
+background:#1b5e20;
+color:#fff;
+padding:18px;
+text-align:center;
+}
+
+.container{
+max-width:900px;
+margin:auto;
+padding:20px;
+}
+
+.card{
+background:#fff;
+border-radius:14px;
+padding:20px;
+margin-bottom:20px;
+box-shadow:0 6px 20px rgba(0,0,0,.08);
+}
+
+.box{
+background:#f9f9f9;
+border-radius:12px;
+padding:15px;
+margin-top:15px;
+}
+
+label{
+font-weight:600;
+display:block;
+margin-top:12px;
+}
+
+input{
+width:100%;
+padding:12px;
+margin-top:6px;
+border-radius:10px;
+border:1px solid #ccc;
+font-size:16px;
+}
+
+button{
+margin-top:20px;
+width:100%;
+padding:14px;
+background:#2e7d32;
+color:#fff;
+border:none;
+border-radius:12px;
+font-size:18px;
+cursor:pointer;
+}
+
+button:hover{background:#256a2b}
+
+.good{color:green;font-weight:700}
+.bad{color:#c62828;font-weight:700}
+
+.note{
+font-size:15px;
+color:#444;
+line-height:1.6;
+}
+
+@media(max-width:600px){
+.container{padding:12px}
+}
+</style>
+</head>
+
+<body>
+
+<header>
+<h1>🌾 కోత – కూలీలు vs యంత్రం</h1>
+<p>తూర్పు గోదావరి రైతుల కోసం (సులభంగా)</p>
+</header>
+
+<div class="container">
+
+<!-- ===== TIME EXPLANATION FIRST ===== -->
+<div class="card">
+<h2>⏱ 1 ఎకరానికి సాధారణంగా ఎంత సమయం పడుతుంది?</h2>
+
+<div class="box">
+<p class="note">
+👷 <b>కూలీలతో కోత</b><br>
+1 ఎకరం కోయాలంటే సాధారణంగా<br>
+<b>9–10 మంది కూలీలు</b> అవసరం అవుతారు.<br>
+పని పూర్తవడానికి <b>పూర్తి 1 రోజు</b> పడుతుంది.
+</p>
+</div>
+
+<div class="box">
+<p class="note">
+🚜 <b>కోత యంత్రంతో</b><br>
+అదే 1 ఎకరాన్ని కోత యంత్రంతో చేస్తే<br>
+పొలం తేమ, మట్టి స్థితిని బట్టి<br>
+<b>సుమారు 1.5 నుండి 2 గంటలు</b> పడుతుంది.
+</p>
+</div>
+
+<p class="note">
+👉 అంటే, <b>యంత్రంతో కోత చాలా వేగంగా</b> పూర్తవుతుంది.
+</p>
+</div>
+
+<!-- ===== COST CALCULATION ===== -->
+<div class="card">
+<h2>💰 1 ఎకరానికి మీ ఖర్చు ఎంత వస్తుందో చూడండి</h2>
+
+<label>👷 ఒక కూలీకి ఒక రోజు జీతం (₹)</label>
+<input type="number" id="wage" placeholder="ఉదా: 600">
+
+<label>🚜 కోత యంత్రం గంటకు ధర (₹)</label>
+<input type="number" id="machineRate" placeholder="ఉదా: 2500">
+
+<button onclick="calculate()">ఖర్చు చూపించు</button>
+</div>
+
+<!-- ===== OUTPUT ===== -->
+<div class="card" id="output" style="display:none">
+
+<h2>📊 1 ఎకరానికి అంచనా ఖర్చు</h2>
+
+<div class="box">
+<p class="note">
+👷 <b>కూలీలతో కోత</b><br>
+10 మంది × 1 రోజు × మీ జీతం<br>
+➡️ మొత్తం ఖర్చు: ₹ <b><span id="manualCost"></span></b>
+</p>
+</div>
+
+<div class="box">
+<p class="note">
+🚜 <b>యంత్రంతో కోత</b><br>
+సగటు 1.75 గంటలు × గంటకు ధర<br>
+➡️ మొత్తం ఖర్చు: ₹ <b><span id="machineCost"></span></b>
+</p>
+</div>
+
+<p class="note" id="decision"></p>
+
+<p class="note">
+గమనిక: యంత్రం సమయం పొలం తేమ, మట్టి, వరి పడిపోయిన స్థితిని బట్టి మారవచ్చు.
+</p>
+
+</div>
+
+</div>
+
+<script>
+function calculate(){
+
+const wage = Number(document.getElementById("wage").value);
+const machineRate = Number(document.getElementById("machineRate").value);
+
+if(wage <= 0 || machineRate <= 0){
+alert("దయచేసి జీతం మరియు యంత్రం ధర ఇవ్వండి");
+return;
+}
+
+/* East Godavari realistic assumptions */
+const workers = 10;        // 9–10 average
+const days = 1;
+const machineHours = 1.75; // average of 1.5–2 hrs
+
+const manualCost = workers * wage * days;
+const machineCost = machineHours * machineRate;
+
+document.getElementById("manualCost").textContent =
+manualCost.toLocaleString("en-IN");
+
+document.getElementById("machineCost").textContent =
+machineCost.toLocaleString("en-IN");
+
+let decisionText = "";
+if(machineCost < manualCost){
+decisionText =
+"👉 <span class='good'>ఈ పరిస్థితిలో యంత్రంతో కోత వేగంగా పూర్తవుతుంది మరియు ఖర్చు తక్కువగా ఉంటుంది</span>";
+}else{
+decisionText =
+"👉 <span class='bad'>ఈ పరిస్థితిలో కూలీలతో కోత ఖర్చు తక్కువ కానీ సమయం ఎక్కువ పడుతుంది</span>";
+}
+
+document.getElementById("decision").innerHTML = decisionText;
+document.getElementById("output").style.display = "block";
+}
+</script>
+
+</body>
+</html>
