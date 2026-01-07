@@ -197,7 +197,8 @@ document.getElementById("datetime").innerText=
 `📅 ${n.toLocaleDateString("te-IN",{weekday:"long",day:"numeric",month:"long",year:"numeric"})}
  ⏰ ${n.toLocaleTimeString("te-IN",{hour:"numeric",minute:"numeric"})}`;
 }
-updateTime();setInterval(updateTime,60000);
+updateTime();
+setInterval(updateTime,60000);
 
 /* ===== LOCATIONS ===== */
 const locations=[
@@ -216,44 +217,53 @@ const locations=[
 const sel=document.getElementById("location");
 locations.forEach((l,i)=>{
 const o=document.createElement("option");
-o.value=i;o.textContent=l.name;
+o.value=i;
+o.textContent=l.name;
 sel.appendChild(o);
 });
 
+/* ===== WEATHER ===== */
 function loadWeather(){
 document.body.classList.remove("rain");
+
 const l=locations[sel.value];
 
-fetch(`https://api.open-meteo.com/v1/forecast?latitude=${l.lat}&longitude=${l.lon}&current_weather=true&daily=precipitation_probability_max&timezone=Asia/Kolkata`)
-.then(r=>r.json()).then(d=>{
-const rain=d.daily.precipitation_probability_max[0];
-const wind=d.current_weather.windspeed;
-
-temp.innerText=d.current_weather.temperature+"°C";
-wind.innerText=wind;
-rainElem=document.getElementById("rain");
-rainElem.innerText=rain+"%";
-
+const tempEl=document.getElementById("temp");
+const descEl=document.getElementById("desc");
+const iconEl=document.getElementById("icon");
+const windEl=document.getElementById("wind");
+const rainEl=document.getElementById("rain");
 const advice=document.getElementById("actionAdvice");
 
-if(rain>=60){
+fetch(`https://api.open-meteo.com/v1/forecast?latitude=${l.lat}&longitude=${l.lon}&current_weather=true&daily=precipitation_probability_max&timezone=Asia/Kolkata`)
+.then(r=>r.json())
+.then(d=>{
+const temperature=d.current_weather.temperature;
+const windSpeed=d.current_weather.windspeed;
+const rainChance=d.daily.precipitation_probability_max[0];
+
+tempEl.innerText=temperature+"°C";
+windEl.innerText=windSpeed+" km/h";
+rainEl.innerText=rainChance+"%";
+
+if(rainChance>=60){
 advice.className="advice red";
 advice.innerText="🌧️ ఈరోజు వర్షం అవకాశం ఉంది – ఎరువులు వేయకండి";
-desc.innerText="వర్షం అవకాశం ఎక్కువ";
-icon.innerText="🌧️";
+descEl.innerText="వర్షం అవకాశం ఎక్కువ";
+iconEl.innerText="🌧️";
 document.body.classList.add("rain");
 }
-else if(wind>=18){
+else if(windSpeed>=18){
 advice.className="advice yellow";
 advice.innerText="💨 గాలి ఎక్కువగా ఉంది – స్ప్రే చేయకపోవడం మంచిది";
-desc.innerText="గాలి ఎక్కువ";
-icon.innerText="💨";
+descEl.innerText="గాలి ఎక్కువ";
+iconEl.innerText="💨";
 }
 else{
 advice.className="advice green";
 advice.innerText="☀️ వాతావరణం బాగుంది – పొలిపని చేయవచ్చు";
-desc.innerText="పని చేయడానికి అనుకూలం";
-icon.innerText="☀️";
+descEl.innerText="పని చేయడానికి అనుకూలం";
+iconEl.innerText="☀️";
 }
 });
 }
